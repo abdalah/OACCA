@@ -1,0 +1,506 @@
+---
+title: 'Report 11: Effectiveness of Placement'
+author: "OACCA - ODP Version 3"
+date: ""
+header-includes:
+- \usepackage{booktabs}
+- \usepackage{graphicx}
+- \usepackage{caption}
+output:
+pdf_document:
+fig_height: 3.5
+fig_width: 5
+keep_tex: yes
+html_document:
+highlight: espresso
+theme: spacelab
+---
+
+# `r prog`
+
+```{r, results='hide', message=FALSE, warning=FALSE, echo=FALSE}
+source("DataCleaning2A.R")
+
+Total <- sum
+
+prog1 <- df.cbecrb[ df.cbecrb$program.intake == prog,]
+prog2 <- df.cbecrb2[ df.cbecrb2$program.intake == prog,]
+
+
+to4length <- subset(df.cbecrb2, program.intake == prog2$program.intake[1] & age.groups.intake == "0-4 years old", )
+above5length <- subset(df.cbecrb, program.intake == prog1$program.intake[1] & age.groups.intake != "0-4 years old", )
+to4 <- prog2[ prog2$age.groups.intake == "0-4 years old",]
+above5 <- prog1[ prog1$age.groups.intake != "0-4 years old",]
+```
+
+To determine the effectiveness of placements, the OACCA Outcomes Data Project assesses changes in problem severity, changes in restrictiveness of living (from treatment to the discharge), the number of educational areas that have been met, and the nature of the discharge. The most desired outcomes for each of these areas include:
+
+1. A decrease in problem severity scores as indicated on the CANS Child Behavioral/Emotional Needs and Child Risk Factors subscales
+2. Movement to a less restrictive living environment at discharge
+3. A decrease in the School scores as indicated on the CANS School subscale
+4. Having a planned discharge
+
+As defined by the OACCA Outcomes Data Project, to experience a placement that is effective:
+1. A child must score lower on the problem severity subscales at discharge, and,
+2. Be residing in a less restrictive living environment upon discharge.
+
+Children and youth who met the educational outcome (attain lower scores on the CANS School subscale) and have a planned discharge in addition to the two outcomes outlined above achieved an exceptionally effective placement.  The information contained in this report is based only on those records that meet the criteria for analysis and these are described below:
+
+1. The agency name, program type and program name should be present in the records.
+2. Records which indicate the duration of stay is less than or equal to 30 days are not included for analysis.
+3. Records should have the Client Demographics and Placement Info submitted to aggregate.
+4. Records should have the relevant CANS tool submitted to aggregate and have valid data at both intake and discharge to be included for analysis.
+5. Records should have a valid response to nature of discharge in the Discharge Summary to be included for analysis.
+6. Records should have a valid response to living environment after discharge in Discharge Summary to be included for analysis.
+
+Tables and Figures 1 and 3 are duplicates of information provided in their respective reports.  Table and Figure 2 determine that a child is being discharged to a less restrictive level of living.  Table and Figure 4 provide frequency data for the nature of discharge.  Table and Figure 5 determine the children who met or did not meet the expectations for problem severity diminishment and restrictiveness of living (lower scores to meet the expectations) to determine an Effective Placement.  For those children who met the expectations of an Effective Placement, Table 6 and Figure 6 determine the children who met or did not meet the expectations for educational success and/or planned discharge to determine placements that exceeded expectations.
+
+Tables showing N = 0 and % = NA indicate that no data was available to generate information in the table.
+
+### Problem Severity Comparison of Mean Scores for Children Birth - 4
+
+\begin{itemize}
+\item `r length(to4length[,1])` Aggregate records available
+\end{itemize}
+
+\captionsetup[table]{labelformat=empty}
+
+
+```{r, results='asis', message=FALSE, warning=FALSE, echo=FALSE}
+library(xtable)
+
+if(length(to4length[,1]) > 0){
+  cans5b.i = mean(to4length$cbe_total.intake + to4length$crb_total.intake)
+  cans5b.d = mean(to4length$cbe_total.discharge + to4length$crb_total.discharge)
+  nobs = length(to4length$client_FID)
+  
+  tab.1 = cbind(nobs, cans5b.i, cans5b.d)
+  
+  addtorow <- list()
+  addtorow$pos <- list()
+  addtorow$pos[[1]] <- 0
+  addtorow$command <- c('N & Intake & Discharge \\\\\n')
+  
+  print(xtable(tab.1, align="lrrr", caption = "Table 1: Problem Severity Comparison of Mean Scores for Children Birth - 4", digits = c(0, 0, 2, 2)), type='latex', comment=FALSE, include.rownames=FALSE, include.colnames = F, caption.placement = "top", booktabs = TRUE, add.to.row = addtorow)
+} else{cat("Note: No useable records are available to generate the table and figure.")}
+```
+
+
+```{r, echo=FALSE, fig.path="graphics/plot"}
+if(length(to4length[,1]) > 0){
+  plot(tab.1[, 2:3], type="b", ylim=c(0, 40), ylab="",  xlab="", col="red", main="Figure 1: Problem Severity Comparison of Mean Scores for Children Birth - 4", cex.main=0.8, cex.axis = .8, font.main = 1, family="serif")
+}
+```
+
+### Problem Severity Comparison of Mean Scores for Children Ages 5+
+
+\begin{itemize}
+\item `r length(above5length[,1])` Aggregate records available
+\end{itemize}
+
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE, results='asis'}
+
+if(length(above5length[,1]) > 0){
+  cans5b.i = mean(above5length$cbe_total.intake + above5length$crb_total.intake)
+  cans5b.d = mean(above5length$cbe_total.discharge + above5length$crb_total.discharge)
+  nobs = length(above5length$client_FID)
+  
+  tab.1 = cbind(nobs, cans5b.i, cans5b.d)
+  
+  addtorow <- list()
+  addtorow$pos <- list()
+  addtorow$pos[[1]] <- 0
+  addtorow$command <- c('N & Intake & Discharge \\\\\n')
+  
+  print(xtable(tab.1, align="lrrr", caption = "Table 1a: Problem Severity Comparison of Mean Scores for Children Ages 5+", digits = c(0, 0, 2, 2)), type='latex', comment=FALSE, include.rownames=FALSE, include.colnames = F, caption.placement = "top", booktabs = TRUE, add.to.row = addtorow)
+} else{cat("Note: No useable records are available to generate the table and figure.")}
+```
+
+
+```{r, echo=FALSE, fig.path="graphics/plot"}
+if(length(above5length[,1]) > 0){
+  plot(tab.1[, 2:3], type="b", ylim=c(0, 40), ylab="",  xlab="", col="red", main="Figure 1a: Problem Severity Comparison of Mean Scores for Children Ages 5+", cex.main=0.8, cex.axis = .8, font.main = 1, family="serif")
+}
+```
+
+```{r, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
+source("DataCleaning4A.R")
+progaggregate <- df[ df$program.intake == prog, ]
+```
+
+### Restrictiveness of Living Levels Prior to Placement, During Placement and to which the Child will be discharged
+
+\begin{itemize}
+\item `r length(progaggregate[,1])` Aggregate records available
+\end{itemize}
+
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE, results='asis'}
+library(xtable)
+
+if(length(progaggregate[,1]) > 0){
+  roles.p = mean(progaggregate$p2a_total.discharge, na.rm = T)
+  roles.d = mean(progaggregate$home.discharge, na.rm = T)
+  nobs = length(progaggregate$client_FID)
+  
+  tab.1 = cbind(nobs, roles.p, roles.d)
+  
+  addtorow <- list()
+  addtorow$pos <- list()
+  addtorow$pos[[1]] <- 0
+  addtorow$command <- c('N & During Placement & Discharge \\\\\n')
+  
+  print(xtable(tab.1, align="lrrr", caption = "Table 2: Restrictiveness of Living Levels Prior to Placement, During Placement and to which the Child will be discharged", digits = c(0, 0, 2, 2)), type='latex', comment=FALSE, include.rownames=FALSE, include.colnames = F, caption.placement = "top", booktabs = TRUE, add.to.row = addtorow)
+} else{cat("Note: No useable records are available to generate the table and figure.")}
+```
+
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE, results='hide'}
+progaggregate$rolescat <- factor( progaggregate$rolescat, levels=c("Less Restrictive", "More Restrictive", "No Change") )
+
+```
+
+
+```{r, echo=FALSE, fig.align='center', fig.path="Figure/path"}
+if(length(progaggregate[,1]) > 0){
+  roles.p = table(progaggregate$rolescat)
+  Aggregate <- prop.table((roles.p))*100
+  
+  barplot(Aggregate, ylim=c(0, 100), ylab="Percent", col="gray", main="Figure 2: Restrictiveness of Living Levels", cex.main=0.8, cex.axis = .8, font.main = 1, family="serif", beside = T)
+} else{cat("Note: No useable records are available to generate the table and figure.")}
+```
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+source("DataCleaning5A.R")
+progaggregate <- df.s[ df.s$program == prog, ]
+```
+
+### Education Outcomes: A Comparison of Scores at Intake and Discharge
+
+\begin{itemize}
+\item `r length(progaggregate$s_total.intake)` Aggregate records available
+\end{itemize}
+
+```{r, results='asis', message=FALSE, warning=FALSE, echo=FALSE}
+if(length(progaggregate$client_FID)){
+  cans5b.i = mean(progaggregate$s_total.intake)
+  cans5b.d = mean(progaggregate$s_total.discharge)
+  nobs = length(progaggregate$client_FID)
+  
+  tab.1 = cbind(nobs, cans5b.i, cans5b.d)
+  
+  addtorow <- list()
+  addtorow$pos <- list()
+  addtorow$pos[[1]] <- 0
+  addtorow$command <- c('N & Intake & Discharge \\\\\n')
+  
+  print(xtable(tab.1, align="lrrr", caption = "Table 3: Education Outcomes: A Comparison of Scores at Intake and Discharge", digits = c(0, 0, 2, 2)), type='latex', comment=FALSE, include.rownames=FALSE, include.colnames = F, caption.placement = "top", booktabs = TRUE, add.to.row = addtorow)
+} else{cat("Note: No useable records are available to generate the table and figure.")}
+```
+
+
+```{r, echo=FALSE, fig.align='center', fig.path= "Graphics"}
+if(length(progaggregate$client_FID)){
+  plot(tab.1[, 2:3], type="b", ylim=c(0, 40), ylab="",  xlab="", col="red", main="Figure 3: Education Outcomes: A Comparison of Scores at Intake and Discharge", cex.main=0.8, cex.axis = .8, font.main = 1, family="serif")
+}
+```
+
+```{r, echo=FALSE, results='hide', message=FALSE}
+source("DataCleaning1A.R")
+
+
+df <- df[ which(df$length.of.stay.months >= 1),]
+newdf <- df[ df$program == prog, ]
+```
+
+### Comparison of Discharge Type at Discharge
+
+\begin{itemize}
+\item `r length(newdf[,1])` Aggregate records
+\end{itemize}
+
+```{r, echo=FALSE, message=FALSE, results='asis'}
+if(length(newdf[,1]) > 0){
+  tab.1 = table(newdf$nature_discharge)
+  tab.1a = as.data.frame(addmargins(tab.1, FUN = Total))
+  tab.1b = round(prop.table(tab.1)*100, digits=0)
+  tab.1b2 = prop.table(tab.1)*100
+  tab.1c = as.data.frame(addmargins(tab.1b2, FUN = Total))
+  
+  tab.1Main = cbind(tab.1a, tab.1c[,2])
+  
+  addtorow <- list()
+  addtorow$pos <- list()
+  addtorow$pos[[1]] <- 0
+  addtorow$command <- c('Nature of Discharge & N & \\% \\\\\n')
+  
+  print(xtable(tab.1Main, align="llrr", caption = "Table 4: Comparison of Discharge Type at Discharge", digits = c(0, 0, 0, 2)),hline.after = c(0, -1, (length(tab.1Main[,1])-1), length(tab.1Main[,1])), type='latex', comment=FALSE, include.rownames=FALSE, include.colnames = F, caption.placement = "top", booktabs = TRUE, add.to.row = addtorow)
+} else{cat("Note: No useable records are available to generate the table and figure.")}
+```
+
+```{r, echo=FALSE, fig.align='center', warning=FALSE, fig.path="Figure/path"}
+if(length(newdf[,1]) > 0){
+  newdf$dischargetype <- ifelse(newdf$nature_discharge == "Planned Discharge", c("Planned Discharge"), c("Unplanned Discharge")) 
+  
+  newdf$dischargetype <- factor(newdf$dischargetype, levels=c("Planned Discharge", "Unplanned Discharge"))
+  
+  tab.d0 = table(newdf$dischargetype)
+  Aggregate = prop.table(tab.d0)*100
+  
+  barplot(Aggregate, ylim=c(0, 100), ylab="Percent", col="gray", main="Figure 4: Comparison of Discharge Type at Discharge", cex.main=0.8, cex.axis = .8, font.main = 1, family="serif", beside = T, xlab = "",  )
+} else{cat("Note: No useable records are available to generate the table and figure.")}
+```
+
+```{r, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
+source("DataCleaning2.R")
+
+df.cbecrb$cans5p.i = (df.cbecrb$cbe_total.intake + df.cbecrb$crb_total.intake)
+df.cbecrb$cans5p.d = (df.cbecrb$cbe_total.discharge + df.cbecrb$crb_total.discharge)
+nobs = length(df.cbecrb$client_FID)
+
+df.cbecrb$probs = df.cbecrb$cans5p.i - df.cbecrb$cans5p.d
+
+df.cbecrb$probscat <- ifelse(df.cbecrb$probs < 0, c("Ineffective"), c("Effective")) 
+
+my.vars = c("client_FID", "probscat", "program.intake", "agency_FID.intake", "age.groups.intake")
+df.a = df.cbecrb[my.vars]
+
+
+df.cbecrb2$cans5p.i = (df.cbecrb2$cbe_total.intake + df.cbecrb2$crb_total.intake)
+df.cbecrb2$cans5p.d = (df.cbecrb2$cbe_total.discharge + df.cbecrb2$crb_total.discharge)
+nobs = length(df.cbecrb2$client_FID)
+
+df.cbecrb2$probs = df.cbecrb2$cans5p.i - df.cbecrb2$cans5p.d
+
+df.cbecrb2$probscat <- ifelse(df.cbecrb2$probs < 0, c("Ineffective"), c("Effective")) 
+
+df2.a = df.cbecrb2[my.vars]
+
+source("DataCleaning4.R")
+
+
+df$rolescat <- factor( df$rolescat, levels=c("Less Restrictive", "More Restrictive", "No Change") )
+
+df.b = merge(df, df.a, by="client_FID")
+
+df.b$cat <- ifelse(df.b$probscat == "Effective" & df.b$rolescat == "Less Restrictive", c("Effective"), c("Ineffective"))
+
+df.b$cat <- factor(df.b$cat, levels = c("Effective", "Ineffective"))
+
+####### for kids birth - 4 #######
+
+df2.b = merge(df, df2.a, by="client_FID")
+
+df2.b$cat <- ifelse(df2.b$probscat == "Effective" & df2.b$rolescat == "Less Restrictive", c("Effective"), c("Ineffective"))
+
+df2.b$cat <- factor(df2.b$cat, levels = c("Effective", "Ineffective"))
+
+prog1 <- df.b[ df.b$program.intake.x == prog,]
+prog2 <- df2.b[ df2.b$program.intake.x == prog,]
+
+to4length <- subset(prog2, age.groups.intake == "0-4 years old", )
+above5length <- subset(prog1, age.groups.intake != "0-4 years old", )
+```
+
+### Effectiveness of Placement for Children Birth - 4
+
+\begin{itemize}
+\item `r length(to4length[,1])` Aggregate records available
+\end{itemize}
+
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE, results='asis'}
+
+## Below 4
+if(length(to4length[,1]) > 0){
+  tab.1 = table(to4length$cat)
+  tab.1a = as.data.frame(addmargins(tab.1, FUN = Total))
+  tab.1b = prop.table(tab.1)*100
+  tab.1c = as.data.frame(addmargins(tab.1b, FUN = Total))
+  
+  tab.1Main = cbind(tab.1a, tab.1c[,2])
+  
+  addtorow <- list()
+  addtorow$pos <- list()
+  addtorow$pos[[1]] <- 0
+  addtorow$command <- c('Effectiveness of Placement & N & \\% \\\\\n')
+  
+  print(xtable(tab.1Main, align="llrr", caption = "Table 5: Effectiveness of Placement for Children Birth - 4", digits = c(0, 0, 0, 2)),hline.after = c(0, -1, (length(tab.1Main[,1])-1), length(tab.1Main[,1])), type='latex', comment=FALSE, include.rownames=FALSE, include.colnames = F, caption.placement = "top", booktabs = TRUE, add.to.row = addtorow)
+} else{cat("Note: No useable records are available to generate the table and figure.")}
+```
+
+```{r, echo=FALSE, fig.align='center', warning=FALSE, fig.path="Figure/path"}
+if(length(to4length[,1]) > 0){
+  tab1.plot <- as.matrix(tab.1Main[1:2, 3])
+  names(tab1.plot) <- c("Effective", "Ineffective")
+  barplot(tab1.plot, ylim=c(0, 100), ylab="Percent", col="gray", main="Figure 5a: Effectiveness of Placement for Children 5+", cex.main=0.8, cex.axis = .8, font.main = 1, family="serif", beside = T, names.arg = c("Effective", "Ineffective"))
+}
+```
+
+### Effectiveness of Placement for Children 5+
+
+\begin{itemize}
+\item `r length(above5length[,1])` Aggregate records available
+\end{itemize}
+
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE, results='asis'}
+
+## above 5
+if(length(above5length[,1]) > 0){
+  tab.1 = table(above5length$cat)
+  tab.1a = as.data.frame(addmargins(tab.1, FUN = Total))
+  tab.1b = prop.table(tab.1)*100
+  tab.1c = as.data.frame(addmargins(tab.1b, FUN = Total))
+  
+  tab.1Main = cbind(tab.1a, tab.1c[,2])
+  
+  addtorow <- list()
+  addtorow$pos <- list()
+  addtorow$pos[[1]] <- 0
+  addtorow$command <- c('Effectiveness of Placement & N & \\% \\\\\n')
+  
+  print(xtable(tab.1Main, align="llrr", caption = "Table 5a: Effectiveness of Placement for Children 5+", digits = c(0, 0, 0, 2)),hline.after = c(0, -1, (length(tab.1Main[,1])-1), length(tab.1Main[,1])), type='latex', comment=FALSE, include.rownames=FALSE, include.colnames = F, caption.placement = "top", booktabs = TRUE, add.to.row = addtorow)
+} else{cat("Note: No useable records are available to generate the table and figure.")}
+```
+
+```{r, echo=FALSE, fig.align='center', warning=FALSE, fig.path="Figure/path"}
+if(length(above5length[,1]) > 0){
+  tab1.plot <- as.matrix(tab.1Main[1:2, 3])
+  names(tab1.plot) <- c("Effective", "Ineffective")
+  barplot(tab1.plot, ylim=c(0, 100), ylab="Percent", col="gray", main="Figure 5a: Effectiveness of Placement for Children 5+", cex.main=0.8, cex.axis = .8, font.main = 1, family="serif", beside = T, names.arg = c("Effective", "Ineffective"))
+}
+```
+
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE, results='asis'}
+source("DataCleaning5.R")
+
+df.s$education = df.s$s_total.intake - df.s$s_total.discharge
+
+attach(df.s)
+df.s$educ_cat[education == 0] <- "No Change"
+df.s$educ_cat[education > 0] <- "Improved"
+df.s$educ_cat[education < 0] <- "Worsened"
+detach(df.s)
+
+my.vars = c("client_FID", "educ_cat", "program_loop", "program", "agency_FID.intake", "age.groups.intake")
+my.df.s = df.s[my.vars]
+
+
+source("DataCleaning1.R")
+
+df <- df[ which(df$length.of.stay.months >= 1),]
+
+tab.7 = table(df$nature_discharge)
+my.vars = c("client_FID", "nature_discharge", "program_loop", "program", "agency_FID", "age.groups")
+my.df.ep = df[my.vars]
+
+my.df = merge(my.df.s, my.df.ep, by="client_FID")
+
+my.df.ep <- my.df.ep[my.df.ep$nature_discharge == "Planned Discharge", ]
+
+attach(my.df.ep)
+
+my.df.ep$success2 <- "Planned Discharge Only"
+
+detach(my.df.ep)
+
+attach(my.df)
+my.df$success <- "Did Not Exceed Expectations"
+#my.df$educ_cat = factor(my.df$educ_cat)
+my.df$success[educ_cat == "Improved" & nature_discharge == "Planned Discharge"] <- "Both"
+my.df$success[educ_cat == "Improved" & nature_discharge == "Administrative Discharge"] <- "Education Only"
+my.df$success[educ_cat == "Improved" & nature_discharge == "Withdrawal by Placing Agency Prior to Completion of Plan"] <- "Education Only"
+my.df$success[educ_cat == "Improved" & nature_discharge == "Self Discharge"] <- "Education Only"
+my.df$success[educ_cat == "Improved" & nature_discharge == "Court Removal"] <- "Education Only"
+my.df$success[educ_cat == "Improved" & nature_discharge == "No Answer"] <- "Education Only"
+my.df$success[educ_cat != "Improved" & nature_discharge == "Planned Discharge"] <- "Planned Discharge Only"
+detach(my.df)
+
+levs <- c("Education Only", "Planned Discharge Only", "Both")
+my.df$success2 <- factor(my.df$success, levels = levs)
+
+my.df.ep$success2 <- factor(my.df.ep$success2, levels = "Planned Discharge Only")
+
+to4length2 <- merge(my.df.ep, to4length, by="client_FID")
+above5length2 <- merge(my.df, above5length, by="client_FID")
+
+above5length2 <- above5length2[ above5length2$cat == "Effective" ,]
+to4length2 <- to4length2[ to4length2$cat == "Effective" ,]
+```
+
+### Exceeds Expectations for Effectiveness of Placement for Birth - 4
+
+\begin{itemize}
+\item `r length(to4length2[,1])` Aggregate records
+\end{itemize}
+
+```{r, echo=FALSE, message=FALSE, results='asis'}
+
+if(length(to4length2[,1]) > 0){
+  tab.1 = table(to4length2$success2)
+  tab.1a = as.data.frame(addmargins(tab.1, FUN = Total))
+  tab.1b = prop.table(tab.1)*100
+  tab.1c = as.data.frame(addmargins(tab.1b, FUN = Total))
+  
+  tab.1Main = cbind(tab.1a, tab.1c[,2])
+  
+  tab.1Main[is.na(tab.1Main)] <- "NA"
+  
+  addtorow <- list()
+  addtorow$pos <- list()
+  addtorow$pos[[1]] <- 0
+  addtorow$command <- c('Effectiveness of Placement Outcomes & N & \\% \\\\\n')
+  
+  print(xtable(tab.1Main, align="llrr", caption = "Table 6: Exceeds Expectations for Effectiveness of Placement for Birth - 4", digits = c(0, 0, 0, 2)),hline.after = c(0, -1, (length(tab.1Main[,1])-1), length(tab.1Main[,1])), type='latex', comment=FALSE, include.rownames=FALSE, include.colnames = F, caption.placement = "top", booktabs = TRUE, add.to.row = addtorow)
+} else{cat("Note: No useable records are available to generate the table and figure.")}
+```
+
+```{r, echo=FALSE, fig.align='center', warning=FALSE, fig.path="Figure/path"}
+if(length(to4length2$client_FID) > 0){
+  barplot(as.matrix(tab.1Main[1, 3]), ylim=c(0, 100), ylab="Percent", col="gray", main="Figure 6: Exceeds Expectations for \n Effectiveness of Placement for Children Birth - 4", cex.main=0.8, cex.axis = .8, font.main = 1, family="serif", beside = T, xlab = "", xaxt="no")
+}
+```
+
+### Exceeds Expectations for Effectiveness of Placement for Children 5+
+
+\begin{itemize}
+\item `r length(above5length2$program.x)` Aggregate records
+\end{itemize}
+
+```{r, echo=FALSE, message=FALSE, results='asis'}
+
+if(length(above5length2[,1]) > 0){
+  tab.1 = table(above5length2$success2)
+  tab.1a = as.data.frame(addmargins(tab.1, FUN = Total))
+  tab.1b = prop.table(tab.1)*100
+  tab.1c = as.data.frame(addmargins(tab.1b, FUN = Total))
+  
+  tab.1Main = cbind(tab.1a, tab.1c[,2])
+  
+  addtorow <- list()
+  addtorow$pos <- list()
+  addtorow$pos[[1]] <- 0
+  addtorow$command <- c('Effectiveness of Placement Outcomes & N & \\% \\\\\n')
+  
+  print(xtable(tab.1Main, align="llrr", caption = "Table 6a: Exceeds Expectations for Effectiveness of Placement for 5+", digits = c(0, 0, 0, 2)),hline.after = c(0, -1, (length(tab.1Main[,1])-1), length(tab.1Main[,1])), type='latex', comment=FALSE, include.rownames=FALSE, include.colnames = F, caption.placement = "top", booktabs = TRUE, add.to.row = addtorow)
+} else{cat("Note: No useable records are available to generate the table and figure.")}
+```
+
+```{r, echo=FALSE, fig.align='center', warning=FALSE, fig.path="Figure/path"}
+if(length(above5length2[,1]) > 0){
+  tab1.plot <- as.matrix(tab.1Main[1:3, 3])
+  names(tab1.plot) <- c("Education Only", "Planned Discharge Only", "Both")
+  barplot(tab1.plot, ylim=c(0, 100), ylab="Percent", col="gray", main="Figure 6a: Exceeds Expectations for \n Effectiveness of Placement for Children 5+", cex.main=0.8, cex.axis = .8, font.main = 1, family="serif", beside = T)
+  axis(1, 1.5:3.5, names(tab1.plot))
+}
+```
+
+```{r, echo=F}
+
+#This will prevent the data in the enviornment from being used in another report in the loop
+rm(list = ls())
+
+```

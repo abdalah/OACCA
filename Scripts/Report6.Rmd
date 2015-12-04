@@ -1,0 +1,157 @@
+---
+title: 'Report 6: Life Functioning'
+author: "OACCA - ODP Version 3"
+date: ""
+header-includes:
+- \usepackage{booktabs}
+- \usepackage{graphicx}
+output:
+pdf_document:
+fig_height: 3.5
+fig_width: 5
+keep_tex: yes
+html_document:
+highlight: espresso
+theme: spacelab
+---
+
+# Agency `r prog`
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+program_name <- gsub("\\d", "", prog) #removes the number in agency
+program_name <- substr(program_name, 2, nchar(program_name)) #removes the first character (space)
+
+prog1 <- df[ df$program_loop == prog,]
+prog2 <- df2[ df2$program_loop == prog,]
+
+
+to4length <- subset(df2, program == program_name & age.groups.intake == "0-4 years old", )
+above5length <- subset(df, program == program_name & age.groups.intake != "0-4 years old", )
+to4 <- prog2[ prog2$age.groups.intake == "0-4 years old",]
+above5 <- prog1[ prog1$age.groups.intake != "0-4 years old",]
+```
+
+
+## Children Birth through age 4 
+The CANS assessment tools are completed by the agency case manager or social worker for each child at intake and discharge. The CANS Birth - 5 is used for children from birth through age 4.  Each tool contains a Life Domain Functioning subscale.  Life functioning outcomes are based on the scores from this subscale.  A lower score indicates a more positive life functioning outcome.  The tables and figures in Report 6 show only the mean scores of children from any given agency.  Positive life functioning is measured by lower mean scores at discharge than at intake.
+
+The information contained in this report is based only on those records that meet the criteria for analysis and these are described below:
+
+1. The agency name, program type and program name should be present in the records.
+2. Records which indicate the duration of stay is less than or equal to 30 days are not included for analysis.
+3. Records should have the Client Demographics and Placement Info submitted to aggregate.
+4. Records should have the relevant tool submitted to aggregate and have valid data at both intake and discharge to be included for analysis in those categories.
+
+The tables and figures in the report include only records which contain valid data for associated variables.  The mean scores in the table are averages based on all children who had a completed Life Domain Functioning subscale score at intake and discharge.  The scores are displayed for both the individual agency and the aggregate.
+
+The tables show mean differences in CANS Life Domain Functioning subscale category between intake and discharge.  Tables showing N = 0 and % = NA indicate that no data was available to generate information in the table.
+
+###Functioning of Children birth through age 4 - A Comparison of Mean Scores at Intake and Discharge
+
+\begin{itemize}
+\item `r length(to4length[,1])` Aggregate records available
+\item `r length(to4[,1])` Agency records available
+\end{itemize}
+
+```{r, results='asis', message=FALSE, warning=FALSE, echo=FALSE}
+library(xtable)
+
+if(length(to4length[,1]) > 0){
+  cans5b.i = mean(to4length$ldf_total.intake)
+  cans5b.d = mean(to4length$ldf_total.discharge)
+  nobs = length(to4length$client_FID)
+  
+  cans5b.iA = mean(to4$ldf_total.intake)
+  cans5b.dA = mean(to4$ldf_total.discharge)
+  nobsA = length(to4$client_FID)
+  
+  
+  tab.1 = cbind.data.frame(nobs, cans5b.i, cans5b.d, nobsA, cans5b.iA, cans5b.dA)
+  
+  tab.1[is.na(tab.1)] <- "NA"
+  
+  addtorow <- list()
+  addtorow$pos <- list()
+  addtorow$pos[[1]] <- 0
+  addtorow$pos[[2]] <- 0
+  addtorow$command <- c(' \\multicolumn{3}{c}{Aggregate} &  \\multicolumn{3}{c}{Agency} \\\\\n', 'N & Intake & Discharge & N & Intake & Discharge \\\\\n')
+  
+  print(xtable(tab.1, align="lrrrrrr", caption = "Functioning of Children birth through age 4 - A Comparison of Mean Scores at Intake and Discharge", digits=c(0, 0, 2, 2, 0, 2, 2)), type='latex', comment=FALSE, include.rownames=FALSE, include.colnames = F, caption.placement = "top", booktabs = TRUE, add.to.row = addtorow)
+  } else{cat("Note: No useable records are available to generate the table and figure.")}
+```
+
+
+```{r, echo=FALSE, fig.align='center', fig.path="Graphics/file"}
+if(length(to4length[,1]) > 0){
+  tab.1 = cbind(nobs, cans5b.i, cans5b.d, nobsA, cans5b.iA, cans5b.dA)
+  plot(tab.1[, 2:3], type="b", ylim=c(0, 40), ylab="", xaxt="no", xlab="", col="red", main="Figure 1: Functioning of Children birth through age 4 - A Comparison of Mean Scores at Intake and Discharge", cex.axis = 0.8, cex.main = 0.8, font.main = 1, family="serif")
+  par(new = T)
+  lines(tab.1[,5:6], col = "blue")
+  axis(1, at=1:2, labels=c("Intake", "Discharge"), col.axis="black", las=1, cex.axis = .75)
+  legend("topright",
+         col = c("red", "blue"), pch = c(1, 1), cex = 0.75, legend = c("Aggregate", "Agency"))
+}
+```
+
+
+
+## Children ages 5 and Above 
+The CANS assessment tools are completed by the agency case manager or social worker for each child at intake and discharge. The CANS Comprehensive 5+ is used for children ages 5 and above.  Each tool contains a Life Domain Functioning subscale.  Life functioning outcomes are based on the scores from this subscale.  A lower score indicates a more positive life functioning outcome.  The tables and figures in Report 6 show only the mean scores of children from any given agency.  Positive life functioning is measured by result lower mean scores at discharge than at intake.
+
+The information contained in this report is based only on those records that meet the criteria for analysis and these are described below:
+
+1. The agency name, program type and program name should be present in the records.
+2. Records which indicate the duration of stay is less than or equal to 30 days are not included for analysis.
+3. Records should have the Client Demographics and Placement Info submitted to aggregate.
+4. Records should have the relevant tool submitted to aggregate and have valid data at both intake and discharge to be included for analysis in those categories.
+
+The tables and figures in the report include only records which contain valid data for associated variables.  The mean scores in the table are averages based on all children who had a completed Life Domain Functioning subscale score at intake and discharge.  The scores are displayed for both the individual agency and the aggregate.
+
+The tables show mean differences in CANS Life Domain Functioning subscale category between intake and discharge.  Tables showing N = 0 and % = NA indicate that no data was available to generate information in the table.
+
+###Functioning of Children ages 5+ - A Comparison of Mean Scores at Intake and Discharge
+
+\begin{itemize}
+\item `r length(above5length[,1])` Aggregate records available
+\item `r length(above5[,1])` Agency records available
+\end{itemize}
+
+```{r, results='asis', message=FALSE, warning=FALSE, echo=FALSE}
+if(length(above5length[,1]) > 0){
+  cans5b.i = mean(above5length$ldf_total.intake)
+  cans5b.d = mean(above5length$ldf_total.discharge)
+  nobs = length(above5length$client_FID)
+  
+  cans5b.iA = mean(above5$ldf_total.intake)
+  cans5b.dA = mean(above5$ldf_total.discharge)
+  nobsA = length(above5$client_FID)
+  
+  
+  tab.1 = cbind.data.frame(nobs, cans5b.i, cans5b.d, nobsA, cans5b.iA, cans5b.dA)
+  
+  tab.1[is.na(tab.1)] <- "NA"
+  
+  addtorow <- list()
+  addtorow$pos <- list()
+  addtorow$pos[[1]] <- 0
+  addtorow$pos[[2]] <- 0
+  addtorow$command <- c(' \\multicolumn{3}{c}{Aggregate} &  \\multicolumn{3}{c}{Agency} \\\\\n', 'N & Intake & Discharge & N & Intake & Discharge \\\\\n')
+  
+  print(xtable(tab.1, align="lrrrrrr", caption = "Functioning of Children ages 5+ - A Comparison of Mean Scores at Intake and Discharge", digits=c(0,0, 2, 2, 0, 2, 2)), type='latex', comment=FALSE, include.rownames=FALSE, include.colnames = F, caption.placement = "top", booktabs = TRUE, add.to.row = addtorow)} else{cat("Note: No useable records are available to generate the table and figure.")}
+```
+
+
+```{r, echo=FALSE, fig.align='center', fig.path="Graphics/file"}
+if(length(above5length[,1]) > 0){
+  tab.1 = cbind(nobs, cans5b.i, cans5b.d, nobsA, cans5b.iA, cans5b.dA)
+  plot(tab.1[, 2:3], type="b", ylim=c(0, 40), ylab="", xaxt="no", xlab="", col="red", main="Figure 1: Functioning of Children ages 5+ - A Comparison of Mean Scores at Intake and Discharge", cex.axis = 0.8, cex.main = 0.8, font.main = 1, family="serif")
+  par(new = T)
+  lines(tab.1[,5:6], col = "blue")
+  axis(1, at=1:2, labels=c("Intake", "Discharge"), col.axis="black", las=1, cex.axis = .75)
+  legend("topright",
+         col = c("red", "blue"), pch = c(1, 1), cex = 0.75, legend = c("Aggregate", "Agency"))
+}
+```
+
+
+

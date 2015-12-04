@@ -1,0 +1,88 @@
+---
+title: 'Report 7: Transition to Independence for Children ages 17+'
+author: "OACCA - ODP Version 3"
+date: ""
+header-includes:
+   - \usepackage{booktabs}
+   - \usepackage{graphicx}
+output:
+  pdf_document:
+    fig_height: 3.5
+    fig_width: 5
+    keep_tex: yes
+  html_document:
+    highlight: espresso
+    theme: spacelab
+---
+#Agency `r prog`
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+program_name <- gsub("\\d", "", prog) #removes the number in agency
+program_name <- substr(program_name, 2, nchar(program_name)) #removes the first character (space)
+
+Total <- sum
+prog <- df[ df$program_loop == prog, ]
+progaggregate <- df[ df$program == program_name, ]
+```
+
+Youth who are 17 years or older are assessed for employment outcomes in relationship to some education outcomes six months after being discharged from a placement.  Information on these variables is obtained at follow-up by the agency.
+
+The information contained in this report is based only on those records that meet the criteria for analysis and these are described below:
+
+1. The agency name, program type and program name should be present in the records.
+2. Records which indicate the duration of stay is less than or equal to 30 days are not included for analysis.
+3. Records should have the Client Demographics, Placement Info and Follow-up Summary submitted to aggregate.
+
+Each table in the report includes only records which contain valid data for associated variables. The table shows the percentage of children ages 17+ in each of the seven categories.  Tables showing N = 0 and % = NA indicate that no data was available to generate information in the table.
+
+###Employment for Youth 17 and Older by Percentage
+
+\begin{itemize}
+\item `r length(progaggregate[,1])` Aggregate records available
+\item `r length(prog[,1])` Agency records available
+\end{itemize}
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE, results='asis'}
+
+# Table 1: Employment for Youth 17 and Older by Percentage (percentage,*** number, agency and aggregate*)
+library(xtable)
+  tab.1 = table(progaggregate$ind_final)
+  tab.1a = as.data.frame(addmargins(tab.1, FUN = Total))
+  tab.1b = prop.table(tab.1)*100
+  tab.1c = as.data.frame(addmargins(tab.1b, FUN = Total))
+  
+  tab.11 = table(prog$ind_final)
+  tab.11a = as.data.frame(addmargins(tab.11, FUN = Total))
+  tab.11b = prop.table(tab.11)*100
+  tab.11c = as.data.frame(addmargins(tab.11b, FUN = Total))
+  
+  tab.1Main = cbind(tab.1a, tab.1c[,2], tab.11a[, 2], tab.11c[,2])
+  
+  addtorow <- list()
+  addtorow$pos <- list()
+  addtorow$pos[[1]] <- 0
+  addtorow$pos[[2]] <- 0
+  addtorow$command <- c('& \\multicolumn{2}{c}{Aggregate} &  \\multicolumn{2}{c}{Agency} \\\\\n', 'Employment & N & \\% & N & \\% \\\\\n')
+  
+  print(xtable(tab.1Main, align="llrrrr", caption = "Employment for Youth 17 and Older by Percentage", digits=c(0, 0, 0, 2, 0, 2)),hline.after = c(0, -1, (length(tab.1Main[,1])-1), length(tab.1Main[,1])), type='latex', comment=FALSE, include.rownames=FALSE, include.colnames = F, caption.placement = "top", booktabs = TRUE, add.to.row = addtorow)
+```
+
+
+```{r, echo=FALSE, fig.align='center', fig.path="Figures/plots"}
+# Figure 1: Employment for Youth 17 and Older by Percentage (bar graph**** showing percent of youth in each category for agency and aggregate*)
+    tab.1plot = cbind(as.matrix(tab.1b), as.matrix(tab.11b))
+  colnames(tab.1plot) <- c("Aggregate", "Agency")
+  names.arg = c("Attending School/\nSeeking a GED",
+  "Diploma/GED\nand Employed...",
+  "Diploma/GED\nand Attending...",
+  "Dropped out/\nExpelled and...",
+  "Diploma/GED\nand no employment...",
+  "Dropped out/Expelled\nand no employment...",
+  "Unknown")
+op <- par(mar = c(11,2,2,2) + 0.1)
+barplot(tab.1plot, ylim=c(0, 100), beside = TRUE, ylab="Percent", col="gray", main="Figure 1: Employment for Youth 17 and Older by Percentage", xlab = "", xaxt="no", cex.main=0.9, las = 2, cex.axis = 0.8, cex.names = 0.8, font.main = 1, family="serif")
+axis(1, at = c(1.5:7.5, 9.5:15.5), labels = c(names.arg, names.arg), cex.axis = 0.55, las=2)
+text(4.5, 75, cex = 0.8, pos = 3, "Aggregate")
+text(12.5, 75, cex = 0.8, pos = 3, "Agency")
+par(op)
+```
+

@@ -1,0 +1,128 @@
+---
+title: 'Report 2: Problem Severity Diminishment'
+author: "OACCA - ODP Version 3"
+date: ""
+header-includes:
+   - \usepackage{booktabs}
+   - \usepackage{graphicx}
+   - \usepackage[utf8]{inputenc}
+   - \usepackage{caption}
+output:
+  pdf_document:
+    fig_height: 3.5
+    fig_width: 5
+  html_document:
+    highlight: espresso
+    theme: spacelab
+---
+
+```{r setup, echo=FALSE, message=FALSE}
+#opts_chunk$set(fig.align='center', error=TRUE)
+```
+
+
+# Agency `r prog`
+```{r, echo=FALSE, results='hide'}
+Total <- sum # Swaps "Total" for "Sum"
+
+to4length <- subset(df.cbecrb2, program.intake == prog & age.groups.intake == "0-4 years old", )
+above5length <- subset(df.cbecrb, program.intake == prog & age.groups.intake != "0-4 years old", )
+
+
+```
+
+
+## Children Birth through age 4 
+The CANS assessment tools are completed by the agency case manager or social worker for each child at intake and discharge.  The CANS Birth - 5 tool is used for children under the age of 5.  Each tool contains a Child Risk Behaviors subscale and a Child Behavioral/Emotional Needs subscale.  Problem severity is based on the total of the scores for the two subscales.  A higher sum score of all the factors assessed on each subscale indicates more severe problems.  The tables and figures in Report 2 show only the mean scores of children from any given agency.  Problem severity diminishment occurs when the mean scores at discharge are lower than the mean scores at intake.
+
+The information contained in this report is based only on those records that meet the criteria for analysis and these are described below:
+
+1. The agency name, program type and program name should be present in the records.
+2. Records which indicate the duration of stay is less than or equal to 30 days are not included for analysis.
+3. Records should have the Client Demographics and Placement Info submitted to aggregate.
+4. Records should have the relevant tools submitted to aggregate and have valid data at both intake and discharge to be included for analysis in those categories.
+
+###Problem Severity Comparison of Mean Scores for Children Birth - 4
+
+\begin{itemize}
+  \item `r length(to4length[,1])` Aggregate records available
+\end{itemize}
+
+\captionsetup[table]{labelformat=empty}
+
+
+```{r, results='asis', message=FALSE, warning=FALSE, echo=FALSE}
+library(xtable)
+
+if(length(to4length$client_FID) > 0){
+  cans5b.i = mean(to4length$cbe_total.intake + to4length$crb_total.intake)
+  cans5b.d = mean(to4length$cbe_total.discharge + to4length$crb_total.discharge)
+  nobs = length(to4length$client_FID)
+  
+  tab.1 = cbind(nobs, cans5b.i, cans5b.d)
+  
+  addtorow <- list()
+  addtorow$pos <- list()
+  addtorow$pos[[1]] <- 0
+  addtorow$command <- c('N & Intake & Discharge \\\\\n')
+  
+  print(xtable(tab.1, align="lrrr", caption = "Table 1: Problem Severity Comparison of Mean Scores for Children Birth - 4", digits = c(0, 0, 2, 2)), type='latex', comment=FALSE, include.rownames=FALSE, include.colnames = F, caption.placement = "top", booktabs = TRUE, add.to.row = addtorow)} else{cat("Note: No useable records are available to generate the table and figure.")}
+```
+
+
+```{r, echo=FALSE, fig.path="graphics/plot"}
+if(length(to4length$agency_program_FID) > 0){
+ plot(tab.1[, 2:3], type="b", ylim=c(0, 40), ylab="", xaxt="no", xlab="", col="red", main="Figure 1: Problem Severity Comparison of Mean Scores for Children Birth - 4", cex.main=0.8, cex.axis = .8, font.main = 1, family="serif")
+  par(new = T)
+ axis(1, at=1:2, labels=c("Intake", "Discharge"), col.axis="black", las=1, cex.axis = .8)
+}
+```
+
+
+## Children ages 5 and Above 
+The CANS assessment tools are completed by the agency case manager or social worker for each child at intake and discharge.  The CANS Comprehensive 5+ is used for children ages 5 and above.  Each tool contains a Child Behavior/Emotional Needs subscale and a Child Risk Factors subscale.  Problem severity is based on the total of the scores for both subscales.  A higher sum score of all the factors assessed on each subscale indicates more severe problems.  The tables and figures in Report 2 show only the mean scores of children from any given agency.  Problem severity diminishment occurs when the mean scores at discharge are lower than the mean scores at intake.
+
+The information contained in this report is based only on those records that meet the criteria for analysis and these are described below:
+
+1. The agency name, program type and program name should be present in the records.
+2. Records which indicate the duration of stay is less than or equal to 30 days are not included for analysis.
+3. Records should have the Client Demographics and Placement Info submitted to aggregate.
+4. Records should have the relevant tool submitted to aggregate and have valid data at both intake and discharge to be included for analysis in those categories.
+
+The tables and figures in the report include only records which contain valid data for associated variables.  The mean scores in the table are averages based on all children with an intake and discharge problem severity score. These are displayed for both the individual agency and the aggregate.
+
+The tables show mean differences in CANS Child Behavior/Emotional Needs and Child Risk Behavior subscales categories between intake and discharge.  Tables showing N = 0 and % = NA indicate that no data was available to generate information in the table.
+
+###Problem Severity Comparison of Mean Scores for Children Ages 5+
+
+
+\begin{itemize}
+  \item `r length(above5length$agency_FID.intake)` Aggregate records available
+\end{itemize}
+
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE, results='asis'}
+
+if(length(above5length$client_FID) > 0){
+  cans5b.i = mean(above5length$cbe_total.intake + above5length$crb_total.intake)
+  cans5b.d = mean(above5length$cbe_total.discharge + above5length$crb_total.discharge)
+  nobs = length(above5length$client_FID)
+  
+  tab.1 = cbind(nobs, cans5b.i, cans5b.d)
+  
+  addtorow <- list()
+  addtorow$pos <- list()
+  addtorow$pos[[1]] <- 0
+  addtorow$command <- c('N & Intake & Discharge \\\\\n')
+  
+  print(xtable(tab.1, align="lrrr", caption = "Table 2: Problem Severity Comparison of Mean Scores for Children Ages 5+", digits = c(0, 0, 2, 2)), type='latex', comment=FALSE, include.rownames=FALSE, include.colnames = F, caption.placement = "top", booktabs = TRUE, add.to.row = addtorow)} else{cat("Note: No useable records are available to generate the table and figure.")}
+```
+
+
+```{r, echo=FALSE, fig.path="graphics/plot"}
+if(length(above5length$agency_program_FID) > 0){
+ plot(tab.1[, 2:3], type="b", ylim=c(0, 40), ylab="", xaxt="no", xlab="", col="red", main="Figure 2: Problem Severity Comparison of Mean Scores for Children Ages 5+", cex.main=0.8, cex.axis = 0.8, font.main = 1, family="serif")
+  par(new = T)
+ axis(1, at=1:2, labels=c("Intake", "Discharge"), col.axis="black", las=1, cex.axis =0.8)
+}
+```

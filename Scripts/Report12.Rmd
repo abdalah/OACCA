@@ -1,0 +1,549 @@
+---
+title: 'Report 12: Satisfaction with Services'
+author: "OACCA - ODP Version 3"
+date: " "
+header-includes:
+- \usepackage{booktabs}
+- \usepackage{graphicx}
+- \usepackage{lscape}
+- \newcommand{\blandscape}{\begin{landscape}}
+- \newcommand{\elandscape}{\end{landscape}}
+- \usepackage{longtable}
+- \usepackage{tabu}
+- \usepackage{float}
+- \usepackage{adjustbox}
+output:
+pdf_document:
+fig_height: 3.5
+fig_width: 5
+keep_tex: yes
+html_document:
+highlight: espresso
+theme: spacelab
+---
+
+#Agency `r prog`
+
+```{r, results='hide', message=FALSE, warning=FALSE, echo=FALSE}
+program_name <- gsub("\\d", "", prog) #removes the number in agency
+program_name <- substr(program_name, 2, nchar(program_name)) #removes the first character (space)
+
+Total <- sum
+prog1 <- df[ df$program_loop == prog, ]
+agglength <- df[ df$program == program_name, ]
+
+prog2 <- df2[ df2$program_loop == prog, ]
+agglength2 <- df2[ df2$program == program_name, ]
+
+prog3 <- df3[ df3$program_loop == prog, ]
+agglength3 <- df3[ df3$program == program_name, ]
+```
+
+The satisfaction survey questions have been paraphrased for the purposes of the tables. 
+
+The information contained in this report is based only on those records that meet the criteria for analysis and are described below:
+
+1. The agency name, program type and program name should be present in the records.
+2. Records which indicate the duration of stay is less than or equal to 30 days are not included for analysis.
+3. Records should have Client Demographics and Placement Info submitted to aggregate.
+
+The tables provide numbers and percentages for analysis and comparison. The percentage in the Total column in these tables is based on the number of responses to the question out of the total number of records completed. Tables showing N = 0 and % = NA indicate that no data was available to generate information in the table.
+
+
+\blandscape
+
+\begin{itemize}
+\item `r length(agglength[,1])` Aggregate records available
+\item `r length(prog1[,1])` Agency records available
+\end{itemize}
+
+### Agency: Child Satisfaction Survey
+
+```{r, results='asis', message=FALSE, warning=FALSE, echo=FALSE}
+library(xtable)
+if(length(agglength[,1]) > 0){
+my.df = prog1[my.vars]
+
+library(reshape)
+z = melt(my.df)
+tab.0 = table(z$variable, z$value)
+tab.p0 = prop.table(tab.0, 1)*100
+
+sq = c("This place was safe", "This place was clean and comfortable", "I feel the adults here have treated me respectfully", "I feel that the adults here have cared about me", "I liked the food that was served", "I feel the adults here helped me understand the reasons why it is important to do the things they ask me to do", "I think my therapist has helped me", "I understood my goals", "I had input into my goals", "I participated in activities that I liked", "I think that I received fair consequences if I misbehaved")
+
+tab.02 <- as.data.frame.matrix(tab.0)
+tab.p02 <- as.data.frame.matrix(tab.p0)
+
+if(is.null(tab.02$`1`)){
+  attach(tab.02)
+  tab.02$`1` <- rep("NA", 11)
+  detach(tab.02)
+    attach(tab.p02)
+  tab.p02$`1` <- rep("NA", 11)
+  detach(tab.p02)
+}
+
+if(is.null(tab.02$`2`)){
+  attach(tab.02)
+  tab.02$`2` <- rep("NA", 11)
+  detach(tab.02)
+      attach(tab.p02)
+  tab.p02$`2` <- rep("NA", 11)
+  detach(tab.p02)
+}
+
+if(is.null(tab.02$`3`)){
+  attach(tab.02)
+  tab.02$`3` <- rep("NA", 11)
+  detach(tab.02)
+      attach(tab.p02)
+  tab.p02$`3` <- rep("NA", 11)
+  detach(tab.p02)
+}
+
+  foo = cbind.data.frame(sq, tab.02[,1], tab.p02[,1],tab.02[,2], tab.p02[,2],tab.02[,3], tab.p02[,3] )
+
+
+tab.x0 = xtable(foo, align="llrrrrrr", caption="Child Satisfaction Survey", digits = c(0, 0, 0, 0, 0, 0, 0, 0))
+
+align(tab.x0) = "lp{0.6\\textwidth}p{.04\\textwidth}p{.04\\textwidth}p{.04\\textwidth}p{.04\\textwidth}p{.04\\textwidth}p{.04\\textwidth}"
+
+addtorow <- list()
+addtorow$pos <- list()
+addtorow$pos[[1]] <- 0
+addtorow$pos[[2]] <- 0
+addtorow$command <- c(' & \\multicolumn{2}{c}{Agree} &  \\multicolumn{2}{c}{Neutral} & \\multicolumn{2}{c}{Disagree} \\\\\n', 'Survey Question & N & \\% & N & \\% & N & \\% \\\\\n')
+
+
+print(xtable(foo, align="llcccccc", caption="Agency: Child Satisfaction Survey"), type='latex', comment=FALSE, include.rownames=FALSE, include.colnames = F, caption.placement = "top", booktabs = TRUE, add.to.row = addtorow)
+} else{cat("Note: This table will be generated after more data are available.")}
+```
+
+\elandscape
+
+
+\blandscape
+
+### Aggregate: Child Satisfaction Survey
+
+```{r, results='asis', message=FALSE, warning=FALSE, echo=FALSE}
+if(length(agglength[,1]) > 0){
+my.df = agglength[my.vars]
+
+z = melt(my.df)
+tab.0 = table(z$variable, z$value)
+tab.p0 = prop.table(tab.0, 1)*100
+
+sq = c("This place was safe", "This place was clean and comfortable", "I feel the adults here have treated me respectfully", "I feel that the adults here have cared about me", "I liked the food that was served", "I feel the adults here helped me understand the reasons why it is important to do the things they ask me to do", "I think my therapist has helped me", "I understood my goals", "I had input into my goals", "I participated in activities that I liked", "I think that I received fair consequences if I misbehaved")
+
+tab.02 <- as.data.frame.matrix(tab.0)
+tab.p02 <- as.data.frame.matrix(tab.p0)
+
+if(is.null(tab.02$`1`)){
+  attach(tab.02)
+  tab.02$`1` <- rep("NA", 11)
+  detach(tab.02)
+    attach(tab.p02)
+  tab.p02$`1` <- rep("NA", 11)
+  detach(tab.p02)
+}
+
+if(is.null(tab.02$`2`)){
+  attach(tab.02)
+  tab.02$`2` <- rep("NA", 11)
+  detach(tab.02)
+      attach(tab.p02)
+  tab.p02$`2` <- rep("NA", 11)
+  detach(tab.p02)
+}
+
+if(is.null(tab.02$`3`)){
+  attach(tab.02)
+  tab.02$`3` <- rep("NA", 11)
+  detach(tab.02)
+      attach(tab.p02)
+  tab.p02$`3` <- rep("NA", 11)
+  detach(tab.p02)
+}
+
+  foo = cbind.data.frame(sq, tab.02[,1], tab.p02[,1],tab.02[,2], tab.p02[,2],tab.02[,3], tab.p02[,3] )
+
+
+tab.x0 = xtable(foo, align="llrrrrrr", caption="Child Satisfaction Survey", digits = c(0, 0, 0, 0, 0, 0, 0, 0))
+
+align(tab.x0) = "lp{0.6\\textwidth}p{.04\\textwidth}p{.04\\textwidth}p{.04\\textwidth}p{.04\\textwidth}p{.04\\textwidth}p{.04\\textwidth}"
+
+addtorow <- list()
+addtorow$pos <- list()
+addtorow$pos[[1]] <- 0
+addtorow$pos[[2]] <- 0
+addtorow$command <- c(' & \\multicolumn{2}{c}{Agree} &  \\multicolumn{2}{c}{Neutral} & \\multicolumn{2}{c}{Disagree} \\\\\n', 'Survey Question & N & \\% & N & \\% & N & \\% \\\\\n')
+
+
+print(xtable(foo, align="llcccccc", caption="Aggregate: Child Satisfaction Survey"), type='latex', comment=FALSE, include.rownames=FALSE, include.colnames = F, caption.placement = "top", booktabs = TRUE, add.to.row = addtorow)
+} else{cat("Note: This table will be generated after more data are available.")}
+```
+
+\elandscape
+
+
+\blandscape
+
+\begin{itemize}
+\item `r length(agglength2[,1])` Aggregate records available
+\item `r length(prog2[,1])` Agency records available
+\end{itemize}
+
+### Agency: Caregiver Satisfaction Survey
+
+```{r, results='hide', echo=FALSE}
+#\begin{itemize}
+#  \item `r length(agglength2$client_FID)` Aggregate records available
+#  \item `r length(prog2$client_FID)` Agency records available
+#\end{itemize}
+```
+
+```{r, results='asis', message=FALSE, warning=FALSE, echo=FALSE}
+# Caregiver table for agency
+
+if(length(agglength2[,1]) > 0){
+my.df = prog2[my.vars2]
+
+z2 = melt(my.df)
+
+# value2 <- data.frame(rep("NA", 13))
+# value3 <- data.frame(rep("NA", 13))
+# colnames(value2) <- "value2"
+# colnames(value3) <- "value3"
+# z2M = cbind(z2, value2, value3)
+
+tab.0 = table(z2$variable, z2$value)
+tab.p0 = prop.table(tab.0, 1)*100
+
+
+sq2 = c("I am pleased with the services my child 
+received.", 
+"I feel my child was in a safe environment.", 
+"I feel my concerns and communications 
+        were addressed in a timely manner.", 
+"I believe the staff was professional and 
+        competent.", 
+"I was treated in a courteous and respectful 
+        manner by the staff.", 
+"I believe the staff care about my child.", 
+"I feel communication between the therapist 
+        and me was adequate and beneficial to my 
+        child.",  
+"I feel that my involvement was welcomed 
+        in the development of a service/treatment 
+        plan for my child.",  
+"I feel that the problems that were 
+        addressed by the therapist were important.",  
+"I understood the way we worked on 
+        problems.",  
+"I believe the services my child received 
+        were helpful to him or her.",  
+"I believe the psychiatric services my child 
+        received were helpful to him or her.",  
+"I would recommend the agency to parents 
+        with children who have similar problems.")
+
+#foo = cbind.data.frame(sq2, tab.0[,1], tab.p0[,1],tab.0[,2], tab.p0[,2],tab.0[,3], tab.p0[,3] )
+# Below the code is being tailored for a response with only "Agree"
+tab.02 <- as.data.frame.matrix(tab.0)
+tab.p02 <- as.data.frame.matrix(tab.p0)
+
+
+
+#rectangularize(tab.02, by = c(1:3))
+
+if(is.null(tab.02$`1`)){
+  attach(tab.02)
+  tab.02$`1` <- rep("NA", 13)
+  detach(tab.02)
+    attach(tab.p02)
+  tab.p02$`1` <- rep("NA", 13)
+  detach(tab.p02)
+}
+
+if(is.null(tab.02$`2`)){
+  attach(tab.02)
+  tab.02$`2` <- rep("NA", 13)
+  detach(tab.02)
+      attach(tab.p02)
+  tab.p02$`2` <- rep("NA", 13)
+  detach(tab.p02)
+}
+
+if(is.null(tab.02$`3`)){
+  attach(tab.02)
+  tab.02$`3` <- rep("NA", 13)
+  detach(tab.02)
+      attach(tab.p02)
+  tab.p02$`3` <- rep("NA", 13)
+  detach(tab.p02)
+}
+
+  foo = cbind.data.frame(sq2, tab.02[,1], tab.p02[,1],tab.02[,2], tab.p02[,2],tab.02[,3], tab.p02[,3] )
+  tab.x0 = xtable(foo, align="llrrrrrr", caption="Child Satisfaction Survey", digits = c(0, 0, 0, 0, 0, 0, 0, 0))
+  
+  align(tab.x0) = "lp{0.6\\textwidth}p{.04\\textwidth}p{.04\\textwidth}p{.04\\textwidth}p{.04\\textwidth}p{.04\\textwidth}p{.04\\textwidth}"
+  
+  addtorow <- list()
+  addtorow$pos <- list()
+  addtorow$pos[[1]] <- 0
+  addtorow$pos[[2]] <- 0
+  addtorow$command <- c(' & \\multicolumn{2}{c}{Agree} &  \\multicolumn{2}{c}{Neutral} & \\multicolumn{2}{c}{Disagree} \\\\\n', 'Survey Question & N & \\% & N & \\% & N & \\% \\\\\n')
+  
+  
+  print(xtable(foo, align="llcccccc", caption="Agency: Caregiver Satisfaction Survey"), type='latex', comment=FALSE, include.rownames=FALSE, include.colnames = F, caption.placement = "top", booktabs = TRUE, add.to.row = addtorow)
+} else{cat("Note: This table will be generated after more data are available.")}
+```
+
+\elandscape
+
+
+\blandscape
+
+### Aggregate: Caregiver Satisfaction Survey
+
+```{r, results='asis', message=FALSE, warning=FALSE, echo=FALSE}
+# Caregiver table for agency
+if(length(agglength2[,1]) > 0){
+my.df = agglength2[my.vars2]
+
+z2 = melt(my.df)
+
+# value2 <- data.frame(rep("NA", 13))
+# value3 <- data.frame(rep("NA", 13))
+# colnames(value2) <- "value2"
+# colnames(value3) <- "value3"
+# z2M = cbind(z2, value2, value3)
+
+tab.0 = table(z2$variable, z2$value)
+tab.p0 = prop.table(tab.0, 1)*100
+
+
+sq2 = c("I am pleased with the services my child 
+received.", 
+"I feel my child was in a safe environment.", 
+"I feel my concerns and communications 
+        were addressed in a timely manner.", 
+"I believe the staff was professional and 
+        competent.", 
+"I was treated in a courteous and respectful 
+        manner by the staff.", 
+"I believe the staff care about my child.", 
+"I feel communication between the therapist 
+        and me was adequate and beneficial to my 
+        child.",  
+"I feel that my involvement was welcomed 
+        in the development of a service/treatment 
+        plan for my child.",  
+"I feel that the problems that were 
+        addressed by the therapist were important.",  
+"I understood the way we worked on 
+        problems.",  
+"I believe the services my child received 
+        were helpful to him or her.",  
+"I believe the psychiatric services my child 
+        received were helpful to him or her.",  
+"I would recommend the agency to parents 
+        with children who have similar problems.")
+
+#foo = cbind.data.frame(sq2, tab.0[,1], tab.p0[,1],tab.0[,2], tab.p0[,2],tab.0[,3], tab.p0[,3] )
+# Below the code is being tailored for a response with only "Agree"
+tab.02 <- as.data.frame.matrix(tab.0)
+tab.p02 <- as.data.frame.matrix(tab.p0)
+
+#rectangularize(tab.02, by = c(1:3))
+
+if(is.null(tab.02$`1`)){
+  attach(tab.02)
+  tab.02$`1` <- rep("NA", 13)
+  detach(tab.02)
+    attach(tab.p02)
+  tab.p02$`1` <- rep("NA", 13)
+  detach(tab.p02)
+}
+
+if(is.null(tab.02$`2`)){
+  attach(tab.02)
+  tab.02$`2` <- rep("NA", 13)
+  detach(tab.02)
+      attach(tab.p02)
+  tab.p02$`2` <- rep("NA", 13)
+  detach(tab.p02)
+}
+
+if(is.null(tab.02$`3`)){
+  attach(tab.02)
+  tab.02$`3` <- rep("NA", 13)
+  detach(tab.02)
+      attach(tab.p02)
+  tab.p02$`3` <- rep("NA", 13)
+  detach(tab.p02)
+}
+
+  foo = cbind.data.frame(sq2, tab.02[,1], tab.p02[,1],tab.02[,2], tab.p02[,2],tab.02[,3], tab.p02[,3] )
+  tab.x0 = xtable(foo, align="llrrrrrr", caption="Child Satisfaction Survey", digits = c(0, 0, 0, 0, 0, 0, 0, 0))
+  
+  align(tab.x0) = "lp{0.6\\textwidth}p{.04\\textwidth}p{.04\\textwidth}p{.04\\textwidth}p{.04\\textwidth}p{.04\\textwidth}p{.04\\textwidth}"
+  
+  addtorow <- list()
+  addtorow$pos <- list()
+  addtorow$pos[[1]] <- 0
+  addtorow$pos[[2]] <- 0
+  addtorow$command <- c(' & \\multicolumn{2}{c}{Agree} &  \\multicolumn{2}{c}{Neutral} & \\multicolumn{2}{c}{Disagree} \\\\\n', 'Survey Question & N & \\% & N & \\% & N & \\% \\\\\n')
+  
+  
+  print(xtable(foo, align="llcccccc", caption="Aggregate: Caregiver Satisfaction Survey"), type='latex', comment=FALSE, include.rownames=FALSE, include.colnames = F, caption.placement = "top", booktabs = TRUE, add.to.row = addtorow)
+} else{cat("Note: This table will be generated after more data are available.")}
+```
+
+\elandscape
+
+\blandscape
+
+\begin{itemize}
+\item `r length(agglength3[,1])` Aggregate records available
+\item `r length(prog3[,1])` Agency records available
+\end{itemize}
+
+### Agency: Public Agency Worker Survey
+
+```{r, results='asis', message=FALSE, warning=FALSE, echo=FALSE}
+# Public agency worker survey table for agency
+if(length(agglength3[,1]) > 0){
+my.df = prog3[my.vars3]
+
+z3 = melt(my.df)
+tab.0 = table(z3$variable, z3$value)
+tab.p0 = prop.table(tab.0, 1)*100
+
+sq3 = c("I believe my referrals are promptly screened and reviewed.","I believe the placement process was completed within a reasonable amount of time.","I understood what was needed from me for the 
+intake process.","I feel the staff and personnel were knowledgeable and competent.","I felt that I was treated in a courteous and respectful manner by the staff and personnel.","I believe that the staff cares about the clients they serve.","The agency did not discriminate in the provision of its services.","I felt my concerns and communications were addressed in a timely manner.","I was satisfied with the level of communication that I have with agency employees.","I felt the range of services offered was adequate to meet the needs of the client I referred.","I felt the treatment services offered to my client were those he/she required.","The facility always appeared clean and well-maintained.","I am satisfied with the amount of progress my client has achieved.","I believe that the agency respects the confidentiality of the clients they serve.","Information on eligibility criteria are readily available.","Information on services offered are readily available.","I will continue to refer clients to the agency.")
+
+tab.02 <- as.data.frame.matrix(tab.0)
+tab.p02 <- as.data.frame.matrix(tab.p0)
+
+
+
+#rectangularize(tab.02, by = c(1:3))
+
+if(is.null(tab.02$`1`)){
+  attach(tab.02)
+  tab.02$`1` <- rep("NA", 17)
+  detach(tab.02)
+    attach(tab.p02)
+  tab.p02$`1` <- rep("NA", 17)
+  detach(tab.p02)
+}
+
+if(is.null(tab.02$`2`)){
+  attach(tab.02)
+  tab.02$`2` <- rep("NA", 17)
+  detach(tab.02)
+      attach(tab.p02)
+  tab.p02$`2` <- rep("NA", 17)
+  detach(tab.p02)
+}
+
+if(is.null(tab.02$`3`)){
+  attach(tab.02)
+  tab.02$`3` <- rep("NA", 17)
+  detach(tab.02)
+      attach(tab.p02)
+  tab.p02$`3` <- rep("NA", 17)
+  detach(tab.p02)
+}
+
+  foo = cbind.data.frame(sq3, tab.02[,1], tab.p02[,1],tab.02[,2], tab.p02[,2],tab.02[,3], tab.p02[,3] )
+
+#foo = cbind.data.frame(sq3, tab.0[,1], tab.p0[,1],tab.0[,2], tab.p0[,2],tab.0[,3], tab.p0[,3] )
+
+
+tab.x0 = xtable(foo, align="llrrrrrr", caption="Child Satisfaction Survey", digits = c(0, 0, 0, 0, 0, 0, 0, 0))
+
+align(tab.x0) = "lp{0.6\\textwidth}p{.04\\textwidth}p{.04\\textwidth}p{.04\\textwidth}p{.04\\textwidth}p{.04\\textwidth}p{.04\\textwidth}"
+
+addtorow <- list()
+addtorow$pos <- list()
+addtorow$pos[[1]] <- 0
+addtorow$pos[[2]] <- 0
+addtorow$command <- c(' & \\multicolumn{2}{c}{Agree} &  \\multicolumn{2}{c}{Neutral} & \\multicolumn{2}{c}{Disagree} \\\\\n', 'Survey Question & N & \\% & N & \\% & N & \\% \\\\\n')
+
+
+print(xtable(foo, align="llcccccc", caption="Agency: Public Agency Worker Survey"), type='latex', comment=FALSE, include.rownames=FALSE, include.colnames = F, caption.placement = "top", booktabs = TRUE, add.to.row = addtorow)
+} else{cat("Note: This table will be generated after more data are available.")}
+```
+\elandscape
+
+
+\blandscape
+
+### Aggregate: Public Agency Worker Survey
+
+```{r, results='asis', message=FALSE, warning=FALSE, echo=FALSE}
+# Public agency worker survey table for agency
+if(length(agglength3[,1]) > 0){
+my.df = agglength3[my.vars3]
+
+z3 = melt(my.df)
+tab.0 = table(z3$variable, z3$value)
+tab.p0 = prop.table(tab.0, 1)*100
+
+sq3 = c("I believe my referrals are promptly screened and reviewed.","I believe the placement process was completed within a reasonable amount of time.","I understood what was needed from me for the 
+intake process.","I feel the staff and personnel were knowledgeable and competent.","I felt that I was treated in a courteous and respectful manner by the staff and personnel.","I believe that the staff cares about the clients they serve.","The agency did not discriminate in the provision of its services.","I felt my concerns and communications were addressed in a timely manner.","I was satisfied with the level of communication that I have with agency employees.","I felt the range of services offered was adequate to meet the needs of the client I referred.","I felt the treatment services offered to my client were those he/she required.","The facility always appeared clean and well-maintained.","I am satisfied with the amount of progress my client has achieved.","I believe that the agency respects the confidentiality of the clients they serve.","Information on eligibility criteria are readily available.","Information on services offered are readily available.","I will continue to refer clients to the agency.")
+
+tab.02 <- as.data.frame.matrix(tab.0)
+tab.p02 <- as.data.frame.matrix(tab.p0)
+
+#rectangularize(tab.02, by = c(1:3))
+
+if(is.null(tab.02$`1`)){
+  attach(tab.02)
+  tab.02$`1` <- rep("NA", 17)
+  detach(tab.02)
+    attach(tab.p02)
+  tab.p02$`1` <- rep("NA", 17)
+  detach(tab.p02)
+}
+
+if(is.null(tab.02$`2`)){
+  attach(tab.02)
+  tab.02$`2` <- rep("NA", 17)
+  detach(tab.02)
+      attach(tab.p02)
+  tab.p02$`2` <- rep("NA", 17)
+  detach(tab.p02)
+}
+
+if(is.null(tab.02$`3`)){
+  attach(tab.02)
+  tab.02$`3` <- rep("NA", 17)
+  detach(tab.02)
+      attach(tab.p02)
+  tab.p02$`3` <- rep("NA", 17)
+  detach(tab.p02)
+}
+
+  foo = cbind.data.frame(sq3, tab.02[,1], tab.p02[,1],tab.02[,2], tab.p02[,2],tab.02[,3], tab.p02[,3] )
+
+
+tab.x0 = xtable(foo, align="llrrrrrr", caption="Child Satisfaction Survey", digits = c(0, 0, 0, 0, 0, 0, 0, 0))
+
+align(tab.x0) = "lp{0.6\\textwidth}p{.04\\textwidth}p{.04\\textwidth}p{.04\\textwidth}p{.04\\textwidth}p{.04\\textwidth}p{.04\\textwidth}"
+
+addtorow <- list()
+addtorow$pos <- list()
+addtorow$pos[[1]] <- 0
+addtorow$pos[[2]] <- 0
+addtorow$command <- c(' & \\multicolumn{2}{c}{Agree} &  \\multicolumn{2}{c}{Neutral} & \\multicolumn{2}{c}{Disagree} \\\\\n', 'Survey Question & N & \\% & N & \\% & N & \\% \\\\\n')
+
+
+print(xtable(foo, align="llcccccc", caption="Aggregate: Public Agency Worker Survey"), type='latex', comment=FALSE, include.rownames=FALSE, include.colnames = F, caption.placement = "top", booktabs = TRUE, add.to.row = addtorow)
+} else{cat("Note: This table will be generated after more data are available.")}
+```
+
+\elandscape

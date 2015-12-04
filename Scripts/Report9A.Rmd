@@ -1,0 +1,64 @@
+---
+title: 'Report 9: Legal Involvement'
+author: "OACCA - ODP Version 3"
+date: ""
+header-includes:
+   - \usepackage{booktabs}
+   - \usepackage{graphicx}
+output:
+  pdf_document:
+    fig_height: 3.5
+    fig_width: 5
+    keep_tex: yes
+  html_document:
+    highlight: espresso
+    theme: spacelab
+---
+# `r prog`
+
+Outcome goals include that children will avoid post discharge involvement with law enforcement or the judicial system for reasons due to their own actions. Legal involvement includes any involvement with the Juvenile/Probate Court system except for reasons of traffic violation and/or court reviews, such as adoption finalization.  At Follow-Up, data is collected on whether the child had any legal involvement (since leaving the program) due to his/her own actions. (The specific type of legal involvement is not collected at Follow-Up.)
+
+The information contained in this report is based only on those records that meet the criteria for analysis and these are described below:
+
+1. The agency name, program type and program name should be present in the records.
+2. Records which indicate the duration of stay is less than or equal to 30 days are not included for analysis.
+3. Records should have the Client Demographics and Placement Info submitted to aggregate.
+
+The table and figure in this report provides basic frequencies (percentages) for each of the response options for the question related to legal involvement.  Table 1 and Figure 1 contain only those records where the Follow-up Summary has been submitted to aggregate and specifically determine whether the outcome goal was achieved. A "no" response indicates that a child has avoided legal involvement since leaving the placement.
+
+
+```{r, results='hide', message=FALSE, warning=FALSE, echo=FALSE}
+Total <- sum
+progaggregate <- df[ df$program == prog, ]
+```
+
+###Legal Involvement Post Discharge
+
+\begin{itemize}
+\item `r length(progaggregate$sex)` Aggregate records available
+\end{itemize}
+
+```{r, results='asis', message=FALSE, warning=FALSE, echo=FALSE}
+library(xtable)
+  tab.1 = table(progaggregate$court)
+  tab.1a = as.data.frame(addmargins(tab.1, FUN = Total))
+  tab.1b = prop.table(tab.1)*100
+  tab.1c = as.data.frame(addmargins(tab.1b, FUN = Total))
+  
+  tab.1Main = cbind(tab.1a, tab.1c[,2])
+  
+  addtorow <- list()
+  addtorow$pos <- list()
+  addtorow$pos[[1]] <- 0
+  addtorow$command <- c('Legal Involvement & N & \\% \\\\\n')
+  
+  print(xtable(tab.1Main, align="llrr", caption = "Legal Involvement Post Discharge", digits = c(0, 0, 0, 2)),hline.after = c(0, -1, (length(tab.1Main[,1])-1), length(tab.1Main[,1])), type='latex', comment=FALSE, include.rownames=FALSE, include.colnames = F, caption.placement = "top", booktabs = TRUE, add.to.row = addtorow)
+```
+
+
+```{r, echo=FALSE}
+barplot(tab.1b, ylim=c(0, 100), beside = TRUE, ylab="Percent", col="gray", main="Figure 1: Legal Involvement Post Discharge", las = 2, cex.main=0.8, cex.axis = .8, font.main = 1, family="serif")
+```
+
+
+

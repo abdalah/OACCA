@@ -1,0 +1,23 @@
+---
+output: pdf_document
+title: Report 1 Walk Through
+author: "Abdalah El-Barrad"
+---
+
+Firstly, we start with the data cleaning file. This file takes the data from the csv and turns it into one or more dataframes. Look at the comments inserted in the DataCleaning1.R file for more information. This file is the first one sourced in our Report1.R file. The Report1.R file is where all the action is happening. Here you can see that the data created by sourcing the DataCleaning file. This is important because we need this for our loop. The loop is created by taking all of the data in the df$program_loop variable and finding all the unique strings. The unique strings represent the unique programs in each agency.
+
+```{r, echo=FALSE}
+
+  source('Scripts/DataCleaning1.R')
+
+  #unique(df$program_loop)
+
+```
+
+When you see the code:
+
+```{r}
+  for(prog in unique(df$program_loop)){ print(prog)}
+```
+It means that for "every unique object in program_loop, create a string called "prog" and do the stuff in curly brackets".
+So when entering the loop the program goes in order and prog is defined by whatever unique program it is on the list above. So for each program it renders a pdf using the Report1.Rmd. Within the Rmd file, you can see that prog is defined as a string (the name of the program from the loop) until about line 22. There, prog turns into a data frame subset to only those agency and program match prog's. Note that this does not create a problem in the 'render' function because it takes in all of its parameters in the beginning before it is changed in the Rmd. Once the program finishes rendering the pdf, it assigns prog to the next unique agency and program.

@@ -1,0 +1,229 @@
+---
+pnewdf_document: null
+author: "OACCA - ODP Version 3"
+output: pdf_document
+header-includes: \usepackage{booktabs}
+highlight: espresso
+html_document: null
+keep_tex: yes
+fig_width: 5
+theme: spacelab
+fig_height: 3.5
+---
+
+
+# Agency `r prog` %prog is printed as a string to show the agency number and program on the top of the page
+```{r, echo=FALSE, results='hide'}
+program_name <- gsub("\\d", "", prog) #removes the number in agency
+program_name <- substr(program_name, 2, nchar(program_name)) #removes the first character (space)
+
+Total <- sum # Swaps "Total" for "Sum"
+prog <- df[ df$program_loop == prog,] #This subsets the data to only those that match prog's agency and program
+newdf <- df[ df$program == program_name, ] #Aggregate - this is a subset that matches prog's program to show the aggregate
+```
+
+
+
+
+## Report 1 -- Demographics
+
+General demographic information is collected on each child entering the program. This report provides the characteristics of those children. The information contained in this report is based only on those records of agencies participating in Version 3. In particular, this report is based on:
+
+\begin{itemize}
+  \item `r length(newdf$id)` Aggregate records
+  \item `r length(prog$id)` Agency/Program records
+\end{itemize}
+
+
+
+```{r, echo=FALSE, message=FALSE, results='asis'}
+library(xtable)
+
+tab.1 = table(newdf$age.groups) #Creates a table of the age groups in the aggregate
+tab.1a = as.data.frame(addmargins(tab.1, FUN = Total)) #Turns the table into a dataframe and adds the total on the bottom
+tab.1b = round(prop.table(tab.1)*100, digits=0) #Table of the age groups' percent porportion
+tab.1b2 = prop.table(tab.1)*100
+tab.1c = as.data.frame(addmargins(tab.1b2, FUN = Total)) #Turns the table into a dataframe and adds the total on the bottom
+
+#The same thing is done to the agency's data
+tab.11 = table(prog$age.groups)
+tab.11a = as.data.frame(addmargins(tab.11, FUN = Total))
+tab.11b = round(prop.table(tab.11)*100, digits=0)
+tab.11b2 = prop.table(tab.11)*100
+tab.11c = as.data.frame(addmargins(tab.11b2, FUN = Total))
+
+tab.1Main = cbind(tab.1a, tab.1c[,2], tab.11a[, 2], tab.11c[,2]) #The agency's data and the aggregate are combined
+
+tab.1Main[is.na(tab.1Main)] <- "NA" #Any missing data is displayed with the "NA" in the table
+
+#The following code is to format the LaTeX code and create a multicolumn for Agency and Aggregate and to name all the columns explicitly
+addtorow <- list()
+addtorow$pos <- list()
+addtorow$pos[[1]] <- 0
+addtorow$pos[[2]] <- 0
+addtorow$command <- c('& \\multicolumn{2}{c}{Aggregate} &  \\multicolumn{2}{c}{Agency} \\\\\n', 'Age Group & N & \\% & N & \\% \\\\\n')
+
+print(xtable(tab.1Main, align="llrrrr", caption = "Age", digits=c(0, 0, 0, 2, 0, 2)),hline.after = c(0, -1, (length(tab.1Main[,1])-1), length(tab.1Main[,1])), type='latex', comment=FALSE, include.rownames=FALSE, include.colnames = F, caption.placement = "top", booktabs = TRUE, add.to.row = addtorow)
+```
+
+
+```{r, echo=FALSE, message=FALSE, results='asis'}
+tab.1 = table(newdf$sex)
+tab.1a = as.data.frame(addmargins(tab.1, FUN = Total))
+tab.1b = round(prop.table(tab.1)*100, digits=0)
+tab.1b2 = prop.table(tab.1)*100
+tab.1c = as.data.frame(addmargins(tab.1b2, FUN = Total))
+
+tab.11 = table(prog$sex)
+tab.11a = as.data.frame(addmargins(tab.11, FUN = Total))
+tab.11b = round(prop.table(tab.11)*100, digits=0)
+tab.11b2 = prop.table(tab.11)*100
+tab.11c = as.data.frame(addmargins(tab.11b2, FUN = Total))
+
+tab.1Main = cbind(tab.1a, tab.1c[,2], tab.11a[, 2], tab.11c[,2])
+
+tab.1Main[is.na(tab.1Main)] <- "NA"
+
+addtorow <- list()
+addtorow$pos <- list()
+addtorow$pos[[1]] <- 0
+addtorow$pos[[2]] <- 0
+addtorow$command <- c('& \\multicolumn{2}{c}{Aggregate} &  \\multicolumn{2}{c}{Agency} \\\\\n', 'Sex & N & \\% & N & \\% \\\\\n')
+
+print(xtable(tab.1Main, align="llrrrr", caption = "Sex", digits=c(0, 0, 0, 2, 0, 2)),hline.after = c(0, -1, (length(tab.1Main[,1])-1), length(tab.1Main[,1])), type='latex', comment=FALSE, include.rownames=FALSE, include.colnames = F, caption.placement = "top", booktabs = TRUE, add.to.row = addtorow)
+```
+
+
+```{r, echo=FALSE, message=FALSE, results='asis'}
+tab.1 = table(newdf$race)
+tab.1a = as.data.frame(addmargins(tab.1, FUN = Total))
+tab.1b = round(prop.table(tab.1)*100, digits=0)
+tab.1b2 = prop.table(tab.1)*100
+tab.1c = as.data.frame(addmargins(tab.1b2, FUN = Total))
+
+tab.11 = table(prog$race)
+tab.11a = as.data.frame(addmargins(tab.11, FUN = Total))
+tab.11b = round(prop.table(tab.11)*100, digits=0)
+tab.11b2 = prop.table(tab.11)*100
+tab.11c = as.data.frame(addmargins(tab.11b2, FUN = Total))
+
+tab.1Main = cbind(tab.1a, tab.1c[,2], tab.11a[, 2], tab.11c[,2])
+
+tab.1Main[is.na(tab.1Main)] <- "NA"
+
+addtorow <- list()
+addtorow$pos <- list()
+addtorow$pos[[1]] <- 0
+addtorow$pos[[2]] <- 0
+addtorow$command <- c('& \\multicolumn{2}{c}{Aggregate} &  \\multicolumn{2}{c}{Agency} \\\\\n', 'Race & N & \\% & N & \\% \\\\\n')
+
+print(xtable(tab.1Main, align="llrrrr", caption = "Race", digits=c(0, 0, 0, 2, 0, 2)),hline.after = c(0, -1, (length(tab.1Main[,1])-1), length(tab.1Main[,1])), type='latex', comment=FALSE, include.rownames=FALSE, include.colnames = F, caption.placement = "top", booktabs = TRUE, add.to.row = addtorow)
+```
+
+
+```{r, echo=FALSE, message=FALSE, results='asis'}
+tab.1 = table(newdf$diagnosis)
+tab.1a = as.data.frame(addmargins(tab.1, FUN = Total))
+tab.1b = round(prop.table(tab.1)*100, digits=0)
+tab.1b2 = prop.table(tab.1)*100
+tab.1c = as.data.frame(addmargins(tab.1b2, FUN = Total))
+
+tab.11 = table(prog$diagnosis)
+tab.11a = as.data.frame(addmargins(tab.11, FUN = Total))
+tab.11b = round(prop.table(tab.11)*100, digits=0)
+tab.11b2 = prop.table(tab.11)*100
+tab.11c = as.data.frame(addmargins(tab.11b2, FUN = Total))
+
+tab.1Main = cbind(tab.1a, tab.1c[,2], tab.11a[, 2], tab.11c[,2])
+
+tab.1Main[is.na(tab.1Main)] <- "NA"
+
+addtorow <- list()
+addtorow$pos <- list()
+addtorow$pos[[1]] <- 0
+addtorow$pos[[2]] <- 0
+addtorow$command <- c('& \\multicolumn{2}{c}{Aggregate} &  \\multicolumn{2}{c}{Agency} \\\\\n', 'Diagnosis & N & \\% & N & \\% \\\\\n')
+
+print(xtable(tab.1Main, align="llrrrr", caption = "Diagnosis", digits=c(0, 0, 0, 2, 0, 2)),hline.after = c(0, -1, (length(tab.1Main[,1])-1), length(tab.1Main[,1])), type='latex', comment=FALSE, include.rownames=FALSE, include.colnames = F, caption.placement = "top", booktabs = TRUE, add.to.row = addtorow)
+```
+
+
+```{r, echo=FALSE, message=FALSE, results='asis'}
+tab.1 = table(newdf$los.months)
+tab.1a = as.data.frame(addmargins(tab.1, FUN = Total))
+tab.1b = round(prop.table(tab.1)*100, digits=0)
+tab.1b2 = prop.table(tab.1)*100
+tab.1c = as.data.frame(addmargins(tab.1b2, FUN = Total))
+
+tab.11 = table(prog$los.months)
+tab.11a = as.data.frame(addmargins(tab.11, FUN = Total))
+tab.11b = round(prop.table(tab.11)*100, digits=0)
+tab.11b2 = prop.table(tab.11)*100
+tab.11c = as.data.frame(addmargins(tab.11b2, FUN = Total))
+
+tab.1Main = cbind(tab.1a, tab.1c[,2], tab.11a[, 2], tab.11c[,2])
+
+tab.1Main[is.na(tab.1Main)] <- "NA"
+
+addtorow <- list()
+addtorow$pos <- list()
+addtorow$pos[[1]] <- 0
+addtorow$pos[[2]] <- 0
+addtorow$command <- c('& \\multicolumn{2}{c}{Aggregate} &  \\multicolumn{2}{c}{Agency} \\\\\n', 'Length of Stay & N & \\% & N & \\% \\\\\n')
+
+print(xtable(tab.1Main, align="llrrrr", caption = "Length of Stay", digits=c(0, 0, 0, 2, 0, 2)),hline.after = c(0, -1, (length(tab.1Main[,1])-1), length(tab.1Main[,1])), type='latex', comment=FALSE, include.rownames=FALSE, include.colnames = F, caption.placement = "top", booktabs = TRUE, add.to.row = addtorow)
+```
+
+
+```{r, echo=FALSE, message=FALSE, results='asis'}
+tab.1 = table(newdf$county.same)
+tab.1a = as.data.frame(addmargins(tab.1, FUN = Total))
+tab.1b = round(prop.table(tab.1)*100, digits=0)
+tab.1b2 = prop.table(tab.1)*100
+tab.1c = as.data.frame(addmargins(tab.1b2, FUN = Total))
+
+tab.11 = table(prog$county.same)
+tab.11a = as.data.frame(addmargins(tab.11, FUN = Total))
+tab.11b = round(prop.table(tab.11)*100, digits=0)
+tab.11b2 = prop.table(tab.11)*100
+tab.11c = as.data.frame(addmargins(tab.11b2, FUN = Total))
+
+tab.1Main = cbind(tab.1a, tab.1c[,2], tab.11a[, 2], tab.11c[,2])
+
+tab.1Main[is.na(tab.1Main)] <- "NA"
+
+addtorow <- list()
+addtorow$pos <- list()
+addtorow$pos[[1]] <- 0
+addtorow$pos[[2]] <- 0
+addtorow$command <- c('& \\multicolumn{2}{c}{Aggregate} &  \\multicolumn{2}{c}{Agency} \\\\\n', 'Out of county? & N & \\% & N & \\% \\\\\n')
+
+print(xtable(tab.1Main, align="llrrrr", caption = "Out of County", digits=c(0, 0, 0, 2, 0, 2)),hline.after = c(0, -1, (length(tab.1Main[,1])-1), length(tab.1Main[,1])), type='latex', comment=FALSE, include.rownames=FALSE, include.colnames = F, caption.placement = "top", booktabs = TRUE, add.to.row = addtorow)
+```
+
+
+```{r, echo=FALSE, message=FALSE, results='asis'}
+tab.1 = table(newdf$nature_discharge)
+tab.1a = as.data.frame(addmargins(tab.1, FUN = Total))
+tab.1b = round(prop.table(tab.1)*100, digits=0)
+tab.1b2 = prop.table(tab.1)*100
+tab.1c = as.data.frame(addmargins(tab.1b2, FUN = Total))
+
+tab.11 = table(prog$nature_discharge)
+tab.11a = as.data.frame(addmargins(tab.11, FUN = Total))
+tab.11b = round(prop.table(tab.11)*100, digits=0)
+tab.11b2 = prop.table(tab.11)*100
+tab.11c = as.data.frame(addmargins(tab.11b2, FUN = Total))
+
+tab.1Main = cbind(tab.1a, tab.1c[,2], tab.11a[, 2], tab.11c[,2])
+
+tab.1Main[is.na(tab.1Main)] <- "NA"
+
+addtorow <- list()
+addtorow$pos <- list()
+addtorow$pos[[1]] <- 0
+addtorow$pos[[2]] <- 0
+addtorow$command <- c('& \\multicolumn{2}{c}{Aggregate} &  \\multicolumn{2}{c}{Agency} \\\\\n', 'Nature of Discharge & N & \\% & N & \\% \\\\\n')
+
+print(xtable(tab.1Main, align="llrrrr", caption = "Nature of Discharge", digits=c(0, 0, 0, 2, 0, 2)),hline.after = c(0, -1, (length(tab.1Main[,1])-1), length(tab.1Main[,1])), type='latex', comment=FALSE, include.rownames=FALSE, include.colnames = F, caption.placement = "top", booktabs = TRUE, add.to.row = addtorow)
+```
